@@ -1,6 +1,5 @@
 
-const jwt = require('jsonwebtoken'); // Import the jsonwebtoken library
-
+const jwt = require('jsonwebtoken');
 
 const generateToken = (payload) => {
   return jwt.sign(
@@ -18,6 +17,4 @@ module.exports = {
   generateToken,
   verifyToken
 };
-
-
 
