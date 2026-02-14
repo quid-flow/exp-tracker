@@ -19,13 +19,13 @@ const failureresponse = (res, rtncode, rtnmsg) => {
 };
 
 // ✅ SERVER ERROR
-const servererrorresponse = (res, error = {}) => {
-  return res.status(500).json({
-    RtnCode: 0,
-    RtnMsg: "Internal Server Error",
-    Data: {},
-    Error: error
-  });
+const servererrorresponse = (res, rtncode = 0, error = null) => {
+    return res.status(500).json({
+        RtnCode: rtncode,
+        RtnMsg: "Internal Server Error",
+        Data: {},
+        Error: error
+    });
 };
 
 module.exports = {

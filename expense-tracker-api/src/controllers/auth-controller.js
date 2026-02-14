@@ -101,9 +101,11 @@ const userLogin  = async (req, res) =>{
 
         return successresponse(res, result.rtncode, result.rtnmsg, { token });
 
-    }catch(error){
-        return servererrorresponse(res, error);
-    }
+    }catch (error) {
+    console.error("LOGIN ERROR:", error);
+    return servererrorresponse(res, 0, error.message);
+}
+
 };
 
 
