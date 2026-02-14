@@ -12,6 +12,7 @@ app.use(express.json());
 
 // routes import
 const authRoutes = require("./src/routes/auth-route");
+console.log("Auth Routes Loaded");
 const userRoutes = require("./src/routes/user-route");
 const categoryRoutes = require("./src/routes/category-route");
 const transactionRoutes = require("./src/routes/transaction-route");
