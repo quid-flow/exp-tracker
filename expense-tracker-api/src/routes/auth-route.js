@@ -11,6 +11,7 @@ const {
   ResetPassword
 } = require("../controllers/auth-controller");
 
+console.log("AUTH ROUTE LOADED");
 // PUBLIC AUTH ROUTES
 router.post("/signup", userSignup);
 router.post("/verify-signup-otp", verifySignupOtp);

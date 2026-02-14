@@ -21,6 +21,11 @@ app.get("/", (req, res) => {
   res.send("Expense Tracker Backend is running 🚀");
 });
 
+app.get("/route-test", (req, res) => {
+  res.send("Route works");
+});
+
+
 // 🔍 DB TEST ROUTE
 app.get("/db-test", async (req, res) => {
   try {
