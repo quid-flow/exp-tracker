@@ -105,7 +105,6 @@ const userLogin  = async (req, res) =>{
     console.error("LOGIN ERROR:", error);
     return servererrorresponse(res, 0, error.message);
 }
-
 };
 
 
