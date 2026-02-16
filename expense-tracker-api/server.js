@@ -1,3 +1,4 @@
+const cors = require("cors");
 require("dotenv").config();
 console.log("DB_URL is =", process.env.DATABASE_URL, " <<<<<< MAKE SURE YOU REMOVE THIS IN PRODUCTION ENVIRONMENT !!!");
 
@@ -9,6 +10,12 @@ const PORT = process.env.PORT || 5000;
 
 // middleware
 app.use(express.json());
+
+app.use(cors({
+  origin: "https://exp-tracker-opal.vercel.app/",
+  credentials: true
+}));
+
 
 // routes import
 const authRoutes = require("./src/routes/auth-route");

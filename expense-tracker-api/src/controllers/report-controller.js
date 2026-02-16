@@ -11,7 +11,7 @@ const getBalance = async(req, res) =>{
         const userid = req.user.userid;
 
         const {rows} = await pool.query(
-            "select * from sp_get_txn($1::uuid)",
+            "select * from sp_get_balance($1::uuid)",
             [userid]
         );
 
@@ -25,9 +25,8 @@ const getBalance = async(req, res) =>{
 
 
         const balance = rows.map(row =>({
-            total_income: row.total_income,
-            categoryid: row.categoryid,
-            total_expense: row.total_expense,
+            // total_income: row.total_income,
+            // total_expense: row.total_expense,
             balance: row.balance
         }));
 
@@ -35,8 +34,8 @@ const getBalance = async(req, res) =>{
         return successresponse(
             res,
             1,
-            "Transaction List Loaded !",
-            {balance}
+            "Balance Loaded !",
+            {balance} 
         );
 
     }
