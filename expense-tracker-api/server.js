@@ -16,6 +16,7 @@ console.log("Auth Routes Loaded");
 const userRoutes = require("./src/routes/user-route");
 const categoryRoutes = require("./src/routes/category-route");
 const transactionRoutes = require("./src/routes/transaction-route");
+const reportRoutes = require("./src/routes/report-route");
 
 // base test route
 app.get("/", (req, res) => {
@@ -49,6 +50,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/transaction", transactionRoutes);
+app.use("/api/report", reportRoutes);
 
 
 
