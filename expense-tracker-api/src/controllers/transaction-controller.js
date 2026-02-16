@@ -11,7 +11,7 @@ const gettxn = async(req, res) =>{
         const userid = req.user.userid;
 
         const {rows} = await pool.query(
-            "select * from sp_get_txn($1)",
+            "select * from sp_get_txn($1::uuid)",
             [userid]
         );
 
