@@ -3,10 +3,10 @@ const router = express.Router();
 
 
 const jwtMiddleware = require('../middleware/auth-middleware');
-const { gettxn , addtxn } = require("../controllers/transaction-controller");
+const { getTxn , addTxn } = require("../controllers/transaction-controller");
 
 
-router.get("/list", jwtMiddleware, gettxn);
-router.post("/add", jwtMiddleware, addtxn);
+router.get("/list", jwtMiddleware, getTxn);
+router.post("/add", jwtMiddleware, addTxn);
 
 module.exports = router;

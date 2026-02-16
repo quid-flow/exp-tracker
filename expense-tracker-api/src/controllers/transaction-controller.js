@@ -6,7 +6,7 @@ const {
 } = require("../utils/response-helper");
 
 
-const gettxn = async(req, res) =>{
+const getTxn = async(req, res) =>{
     try{
         const userid = req.user.userid;
 
@@ -51,7 +51,7 @@ const gettxn = async(req, res) =>{
 }
 
 
-const addtxn = async (req, res) =>{
+const addTxn = async (req, res) =>{
   try {
     const userid = req.user.userid;
     const { categoryid, categorytype, txn_date, amount, note } = req.body;
@@ -92,6 +92,6 @@ const addtxn = async (req, res) =>{
 
 
 module.exports = {
-  gettxn,
-  addtxn
+  getTxn,
+  addTxn
 };
