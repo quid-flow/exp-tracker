@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Landing from "./pages/landing/landing";
+import Landing from "./pages/landing/Landing";
 
 function App() {
   return (
@@ -10,3 +10,5 @@ function App() {
 }
 
 export default App;
+
+
