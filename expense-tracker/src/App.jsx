@@ -1,12 +1,7 @@
-import { Routes, Route } from "react-router-dom";
-import Landing from "./pages/landing/Landing";
+import AppRoutes from "./components/routes/AppRoutes";
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-    </Routes>
-  );
+  return <AppRoutes />;
 }
 
 export default App;

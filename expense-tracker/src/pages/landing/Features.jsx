@@ -1,0 +1,51 @@
+const features = [
+  {
+    title: "Real-Time Tracking",
+    description:
+      "Track income and expenses instantly with smart categorization and accurate balance updates.",
+  },
+  {
+    title: "Monthly Insights",
+    description:
+      "Visual summaries help you understand spending patterns and improve financial decisions.",
+  },
+  {
+    title: "Secure & Reliable",
+    description:
+      "Your financial data is encrypted and securely stored with high-performance infrastructure.",
+  },
+];
+
+const Features = () => {
+  return (
+    <section className="py-24 px-6 bg-slate-900">
+      <div className="max-w-6xl mx-auto text-center">
+        
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          Powerful Financial Tools
+        </h2>
+
+        <p className="text-slate-400 mb-16 max-w-2xl mx-auto">
+          Designed to give you clarity, control, and confidence in managing your finances.
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-slate-950 border border-slate-800 rounded-2xl p-8 text-left hover:border-blue-500 transition duration-300"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-blue-500">
+                {feature.title}
+              </h3>
+              <p className="text-slate-400">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default Features;

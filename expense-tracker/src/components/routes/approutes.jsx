@@ -1,10 +1,12 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Landing from "../pages/landing/Landing";
-import Login from "../pages/auth/Login";
-import Signup from "../pages/auth/Signup";
-import Dashboard from "../pages/dashboard/Dashboard";
-import PrivateRoute from "../components/auth/PrivateRoute";
+import Landing from "../../pages/landing/Landing";
+import Login from "../../pages/auth/Login";
+import Signup from "../../pages/auth/Signup";
+import Dashboard from "../../pages/dashboard/Dashboard";
+import PrivateRoute from "../../components/auth/PrivateRoute";
+import VerifyOtp from "../../pages/auth/VerifyOtp";
+
 
 const AppRoutes = () => {
   const token = localStorage.getItem("token");
@@ -15,6 +17,8 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route path="/" element={<Landing />} />
 
+      
+
       <Route
         path="/login"
         element={token ? <Navigate to="/dashboard" replace /> : <Login />}
@@ -23,6 +27,10 @@ const AppRoutes = () => {
       <Route
         path="/signup"
         element={token ? <Navigate to="/dashboard" replace /> : <Signup />}
+      />
+
+      <Route 
+        path="/verify-otp" element={<VerifyOtp />}
       />
 
       {/* Protected Routes */}
