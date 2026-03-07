@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// import Landing from "../../pages/landing/Landing.jsx";
 import Landing from "../../pages/landing/Landing.jsx";
 import Signup from "../../pages/auth/Signup.jsx";
 import Dashboard from "../../pages/dashboard/dashboard.jsx";
