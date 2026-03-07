@@ -3,7 +3,7 @@ import Features from "./Features";
 import Stats from "./Stats";
 import CTA from "./CTA";
 import Footer from "./Footer";
-import Navbar from "../../components/layout/Navbar";
+import Navbar from "../../components/layout/Navbar.jsx";
 
 
 const Landing = () => {
