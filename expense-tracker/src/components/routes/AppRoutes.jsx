@@ -5,7 +5,7 @@ import Signup from "../../pages/auth/Signup";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import PrivateRoute from "../../components/auth/PrivateRoute";
 import VerifyOtp from "../../pages/auth/VerifyOtp";
-import Login from "../../pages/auth/login";
+import Login from "../../pages/auth/Login";
 
 
 const AppRoutes = () => {
