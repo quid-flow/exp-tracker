@@ -2,10 +2,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Landing from "../../pages/landing/Landing";
 import Signup from "../../pages/auth/Signup";
-import Login from "../../pages/auth/Login";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import PrivateRoute from "../../components/auth/PrivateRoute";
 import VerifyOtp from "../../pages/auth/VerifyOtp";
+import Login from "../../pages/auth/login";
 
 
 const AppRoutes = () => {
