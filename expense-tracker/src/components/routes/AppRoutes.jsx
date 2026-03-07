@@ -5,7 +5,7 @@ import Landing from "../../pages/landing/Landing.jsx";
 import Signup from "../../pages/auth/Signup.jsx";
 import Dashboard from "../../pages/dashboard/dashboard.jsx";
 // import PrivateRoute from "../../components/auth/PrivateRoute.jsx";
-import PrivateRoute from "../../components/auth/PrivateRoute.jsx";
+import PrivateRoute from "../../components/auth/PrivateRoute";
 import VerifyOtp from "../../pages/auth/VerifyOtp.jsx";
 import Login from "../../pages/auth/Login.jsx";
 
