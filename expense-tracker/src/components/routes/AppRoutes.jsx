@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Landing from "../../pages/landing/Landing.jsx";
-import Signup from "../../pages/auth/Signup";
-import Dashboard from "../../pages/dashboard/Dashboard";
-import PrivateRoute from "../../components/auth/PrivateRoute";
-import VerifyOtp from "../../pages/auth/VerifyOtp";
-import Login from "../../pages/auth/Login";
+import Signup from "../../pages/auth/Signup.jsx";
+import Dashboard from "../../pages/dashboard/Dashboard.jsx";
+import PrivateRoute from "../../components/auth/PrivateRoute.js";
+import VerifyOtp from "../../pages/auth/VerifyOtp.jsx";
+import Login from "../../pages/auth/Login.jsx";
 
 
 const AppRoutes = () => {
