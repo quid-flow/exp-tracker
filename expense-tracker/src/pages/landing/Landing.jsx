@@ -1,10 +1,9 @@
-import Hero from "./Hero";
-import Features from "./Features";
-import Stats from "./Stats";
-import CTA from "./CTA";
-import Footer from "./Footer";
-// import Navbar from "../../components/layout/Navbar.jsx";
-import Navbar from "../../components/layout/Navbar";
+import Hero from "./Hero.jsx";
+import Features from "./Features.jsx";
+import Stats from "./Stats.jsx";
+import CTA from "./CTA.jsx";
+import Footer from "./Footer.jsx";
+import Navbar from "../../components/layout/Navbar.jsx";
 
 const Landing = () => {
   return (
