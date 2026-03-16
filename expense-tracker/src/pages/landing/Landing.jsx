@@ -3,11 +3,11 @@ import Features from "./Features.jsx";
 import Stats from "./Stats.jsx";
 import CTA from "./CTA.jsx";
 import Footer from "./Footer.jsx";
-import Navbar from "../../components/layout/Navbar.jsx";
+import Navbar from "../../components/layout/landingnav/LandingNavbar.jsx";
 
 const Landing = () => {
   return (
-    <div className="bg-slate-950 text-white min-h-screen">
+    <div className="bg-slate-950 text-white">
       <Navbar />
       <Hero />
       <Features />
