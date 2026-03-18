@@ -7,12 +7,23 @@ import Navbar from "../../components/layout/landingnav/LandingNavbar.jsx";
 
 const Landing = () => {
   return (
-    <div className="bg-slate-950 text-white">
+    <div className="bg-slate-950 text-white overflow-hidden">
       <Navbar />
+
       <Hero />
-      <Features />
-      <Stats />
-      <CTA />
+
+      <div className="bg-slate-900">
+        <Features />
+      </div>
+
+      <div className="bg-slate-950">
+        <Stats />
+      </div>
+
+      <div className="bg-slate-900">
+        <CTA />
+      </div>
+
       <Footer />
     </div>
   );

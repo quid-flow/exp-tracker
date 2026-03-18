@@ -78,6 +78,9 @@ const DeskNav = () => {
         </Link>
 
         <Link className="hover:text-blue-400">Career</Link>
+
+        <Link className="hover:text-blue-400">DevTools</Link>
+
       </div>
 
       <div className="flex items-center gap-14 text-sm relative">

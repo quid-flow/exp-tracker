@@ -2,25 +2,25 @@ import { Link } from "react-router-dom";
 
 const CTA = () => {
   return (
-    <section className="py-24 px-6 bg-slate-900 border-t border-slate-800">
-      <div className="max-w-4xl mx-auto text-center space-y-8">
-        
-        <h2 className="text-3xl md:text-4xl font-bold">
-          Take Control of Your Financial Future
-        </h2>
+    <section className="relative py-24 px-6 text-center">
 
-        <p className="text-slate-400 max-w-2xl mx-auto">
-          Start tracking your income and expenses today with a secure and modern financial management experience.
-        </p>
+      <div className="absolute inset-0 bg-blue-600/20 blur-3xl"></div>
+
+      <div className="relative max-w-xl mx-auto space-y-6">
+
+        <h2 className="text-4xl font-bold">
+          Start Managing Your Money Today
+        </h2>
 
         <Link
           to="/signup"
-          className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 transition rounded-xl shadow-lg shadow-blue-500/30"
+          className="inline-block px-8 py-4 bg-blue-600 rounded-xl hover:scale-110 transition"
         >
-          Start Tracking Today
+          Get Started
         </Link>
 
       </div>
+
     </section>
   );
 };
