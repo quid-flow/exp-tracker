@@ -3,10 +3,10 @@ import MobileNav from "./MobNav";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur border- border-slate-800">
+    <nav className="sticky top-0 z-50 bg-slate-0/0 backdrop-blur border-none border-slate-800">
+      
 
       <DesktopNav />
-
       <MobileNav />
 
     </nav>
