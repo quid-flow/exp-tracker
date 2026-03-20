@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5174",
+  "http://192.168.10.188:5174",
   "https://exp-tracker-opal.vercel.app"
 ];
 
