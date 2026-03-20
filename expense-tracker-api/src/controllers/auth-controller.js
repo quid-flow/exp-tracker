@@ -20,8 +20,8 @@ const {
 
     // Else Call the Stored Procedure
     const { rows } = await pool.query(
-      "SELECT * FROM SP_AUTH_SIGNUP($1,$2,$3,$4,$5)",
-      [emailid, password, firstname, lastname, gender]
+      "SELECT * FROM SP_AUTH_SIGNUP($1,$2,$3,$4,$5,$6)",
+      [emailid, password, firstname, lastname, gender, null]
     );
 
     const result = rows[0];
