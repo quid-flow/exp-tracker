@@ -1,71 +1,73 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
-const OtpInput = ({ onComplete }) => {
+const OtpInput = ({ length = 6, onVerify, loading }) => {
 
-  const inputs = useRef([]);
+  const [otp, setOtp] = useState(Array(length).fill(""));
+  const inputsRef = useRef([]);
 
-  const handleChange = (e, index) => {
+  const handleChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
 
-    const value = e.target.value;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
 
-    if (!/^[0-9]?$/.test(value)) return;
-
-    e.target.value = value;
-
-    if (value && index < 5) {
-      inputs.current[index + 1].focus();
+    if (value && index < length - 1) {
+      inputsRef.current[index + 1].focus();
     }
 
-    checkOtp();
-  };
+    const finalOtp = newOtp.join("");
 
+    if (finalOtp.length === length) {
+      onVerify(finalOtp);
+    }
+  };
 
   const handleKeyDown = (e, index) => {
-
     if (e.key === "Backspace") {
-
-      if (!e.target.value && index > 0) {
-        inputs.current[index - 1].focus();
+      if (!otp[index] && index > 0) {
+        inputsRef.current[index - 1].focus();
       }
-
     }
-
   };
 
+  const handlePaste = (e) => {
+    const paste = e.clipboardData.getData("text");
 
-  const checkOtp = () => {
+    if (!/^\d+$/.test(paste)) return;
 
-    const otp = inputs.current.map(input => input.value).join("");
+    const pasteArr = paste.slice(0, length).split("");
+    const newOtp = [...otp];
 
-    if (otp.length === 6) {
-      onComplete(otp);
+    pasteArr.forEach((val, i) => {
+      newOtp[i] = val;
+    });
+
+    setOtp(newOtp);
+
+    if (pasteArr.length === length) {
+      onVerify(pasteArr.join(""));
     }
-
   };
-
 
   return (
-
-    <div className="flex justify-center gap-3">
-
-      {[...Array(6)].map((_, index) => (
-
+    <div className="flex justify-center gap-2 md:gap-3" onPaste={handlePaste}>
+      {otp.map((digit, index) => (
         <input
           key={index}
+          ref={(el) => (inputsRef.current[index] = el)}
           type="text"
           maxLength="1"
-          ref={(el) => (inputs.current[index] = el)}
-          onChange={(e) => handleChange(e, index)}
+          value={digit}
+          disabled={loading}
+          onChange={(e) => handleChange(e.target.value, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
-          className="w-12 h-12 text-center text-lg bg-slate-950 border border-slate-700 rounded-lg focus:border-blue-500 outline-none"
+          className="w-10 h-10 md:w-12 md:h-12 text-center bg-slate-900/60 border border-slate-700 
+          rounded-xl text-white text-lg md:text-xl focus:ring-2 focus:ring-blue-500/40 outline-none"
         />
-
       ))}
-
     </div>
-
   );
-
 };
 
 export default OtpInput;
