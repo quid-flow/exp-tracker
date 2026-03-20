@@ -1,316 +1,422 @@
-import { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import OtpInput from "../../components/auth/OtpInput";
+import apiHelper from "../../api/apiHelper";
+
 
 const Signup = () => {
 
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
 
-  const [showOtpModal,setShowOtpModal] = useState(false);
-  const [verifying,setVerifying] = useState(false);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+    terms: false
+  });
 
-  const otpRefs = useRef([]);
+  // const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleSignup = (e)=>{
-    e.preventDefault();
-    setShowOtpModal(true);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? checked : value
+    });
   };
 
 
-  const handleOtpChange = (e,index)=>{
 
-    const value = e.target.value;
+  const handleSubmit = async (e) => {
+    console.log("form data:", form);
+    e.preventDefault();
 
-    if(!/^[0-9]?$/.test(value)) return;
-
-    e.target.value = value;
-
-    if(value && index < 5){
-      otpRefs.current[index+1].focus();
+    if (!form.firstName || !form.lastName || !form.email || !form.password) {
+      return setError("Required fields missing*");
     }
 
-    checkOtp();
+    if (form.password !== form.confirmPassword) {
+      return setError("Passwords do not match");
+    }
 
-  };
+    if (!form.terms) {
+      return setError("Please accept Terms & Conditions");
+    }
+
+    setError("");
+    setSignupLoading(true);
+
+    try {
+      const data = await apiHelper.post("/auth/signup", {
+        emailid: form.email,
+        password: form.password,
+        firstname: form.firstName,
+        lastname: form.lastName,
+        gender: Number(form.gender)
+      });
+      console.log("res data:", data);
 
 
-  const handleKeyDown = (e,index)=>{
-
-    if(e.key === "Backspace"){
-
-      if(!e.target.value && index > 0){
-        otpRefs.current[index-1].focus();
+      if (data.RtnCode === 1) {
+        setShowOtpModal(true); // 🔥 unified modal
+      } else {
+        setError(data.RtnMsg);
       }
 
+    } catch (err) {
+      setError(err?.RtnMsg || "Signup failed");
+    } finally {
+      setSignupLoading(false);
     }
-
   };
 
 
-  const handlePaste = (e)=>{
 
-    const paste = e.clipboardData.getData("text");
+  const handleVerifyOtp = async (otp) => {
+    console.log("OTP:", otp);
 
-    if(!/^\d{6}$/.test(paste)) return;
+    setLoading(true);
 
-    paste.split("").forEach((num,i)=>{
-      otpRefs.current[i].value = num;
-    });
+    try {
+      const data = await apiHelper.post("/auth/verify-signup-otp", {
+        emailid: form.email,
+        otp: otp
+      });
+      console.log("res data:", data);
 
-    verifyOtp(paste);
 
-  };
+      if (data.RtnCode === 1) {
+        setShowOtpModal(false);
+        navigate("/");
+      } else {
+        setError(data.RtnMsg);
+      }
 
-
-  const checkOtp = ()=>{
-
-    const otp = otpRefs.current.map(i=>i.value).join("");
-
-    if(otp.length === 6){
-      verifyOtp(otp);
+    } catch (err) {
+      setError(err.RtnMsg || "OTP verification failed");
+    } finally {
+      setLoading(false);
     }
-
   };
-
-
-  const verifyOtp = (otp)=>{
-
-    console.log("OTP:",otp);
-
-    setVerifying(true);
-
-    setTimeout(()=>{
-
-      setVerifying(false);
-
-      navigate("/login");
-
-    },5000);
-
-  };
-
 
   return (
+    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
 
-    <div className="min-h-screen bg-slate-950 text-white relative">
-
-
-      {/* Glow */}
-      <div className="absolute top-[-120px] right-[-120px] w-[500px] h-[500px] bg-blue-600/30 blur-[150px] rounded-full"></div>
-
-
+      {/* GLOBAL GLOW */}
+      <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-blue-500/20 blur-[150px] rounded-full"></div>
 
       {/* ================= DESKTOP ================= */}
+      <div className="hidden md:flex min-h-screen items-center justify-center px-10 relative z-10">
 
-      <div className="hidden md:flex min-h-screen items-center justify-center px-6 relative z-10">  
-      {/* <div className="hidden md:flex min-h-screen items-center justify-center px-6"> */}
+        <div className="grid grid-cols-2 max-w-6xl w-full gap-16 items-center">
 
-        <div className="w-full max-w-6xl grid grid-cols-2 gap-16 items-center">
-
-
+          {/* LEFT SIDE */}
           <div className="space-y-6">
 
-            <h1 className="text-4xl font-bold">
-              Master Your Money
-              <br/>
-              <span className="text-blue-500">Track Smarter.</span>
+            <h1 className="text-4xl font-bold text-white leading-tight">
+              Master Your Money <br />
+              <span className="text-blue-500">Track Smarter</span>
             </h1>
 
             <p className="text-slate-400 max-w-md">
-              Create your account and start managing your finances smarter.
+              Create your account and start managing your finances smarter with real-time insights.
             </p>
+
+            <div className="space-y-3 text-sm text-slate-400">
+              <p>✔ Real-time insights</p>
+              <p>✔ Smart savings</p>
+              <p>✔ Secure & encrypted</p>
+            </div>
 
           </div>
 
+          {/* RIGHT SIDE FORM */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-2xl">
 
+            <div className="flex items-center justify-between gap-3 mb-6 rounded-full w-full px-4 py-2">
+              <span className="text-2xl font-bold text-white">Create Account </span>
+              <span> {error && <span className="text-red-600 text-xs">{error}</span>}</span>
+            </div>
 
-          {/* <div className="bg-slate-900 border-none border-slate-800 rounded-2xl p-10"> */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-12 shadow-2xl">
+            <form onSubmit={handleSubmit} className="space-y-4">
 
-            <h2 className="text-3xl font-bold mb-6">
-              Create new account
-            </h2>
-
-
-            <form onSubmit={handleSignup} className="space-y-5">
-
-              <div className="grid grid-cols-2 gap-4">
-
-                <input type="text" placeholder="First name" className="input"/>
-
-                <input type="text" placeholder="Last name" className="input"/>
-
+              <div className="grid grid-cols-2 gap-3">
+                <input name="firstName" placeholder="First Name" onChange={handleChange} className="input text-slate-400" />
+                <input name="lastName" placeholder="Last Name" onChange={handleChange} className="input text-slate-400" />
               </div>
 
-              <input type="email" placeholder="Email address" className="input"/>
+              <input name="email" type="email" placeholder="Email" onChange={handleChange} className="input text-slate-400" />
 
-              <input type="password" placeholder="Password" className="input"/>
+              {/* PASSWORD */}
+              <div className="relative">
+                <input name="password" type={showPassword ? "text" : "password"} placeholder="Password" onChange={handleChange} className="input pr-10 text-slate-400" />
+                <span onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 cursor-pointer text-slate-400">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
 
-              <select className="input">
+              {/* CONFIRM */}
+              <div className="relative">
+                <input name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Confirm Password" onChange={handleChange} className="input pr-10 text-slate-400" />
+                <span onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-3 cursor-pointer text-slate-400">
+                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
 
-                <option>Select gender</option>
+              <select name="gender" onChange={handleChange} className="input  text-slate-400">
+                <option value="">Select Gender</option>
                 <option value="1">Male</option>
                 <option value="2">Female</option>
                 <option value="3">Other</option>
-
               </select>
 
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <input type="checkbox" name="terms" onChange={handleChange} />
+                <span>I agree to <span className="text-blue-500">Terms</span></span>
+              </div>
 
-              <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-500/30">
-                Create Account
+              {/* {error && <p className="text-red-400 text-sm">{error}</p>} */}
+
+              <button
+                disabled={signupLoading}
+                className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl hover:scale-[1.02] transition flex items-center justify-center gap-2"
+              >
+
+                {signupLoading && (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                )}
+
+                {signupLoading ? "Processing..." : "Get Started"}
+
               </button>
 
             </form>
 
-
-
-            <div className="flex items-center my-6">
-
-              <div className="flex-1 border-t border-slate-700"></div>
-
-              <span className="px-3 text-slate-400 text-sm">
-                OR
-              </span>
-
-              <div className="flex-1 border-t border-slate-700"></div>
-
+            {/* GOOGLE */}
+            <div className="mt-5">
+              <button className="w-full flex items-center justify-center gap-3 py-3 bg-white text-black rounded-xl">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5" />
+                Continue with Google
+              </button>
             </div>
 
-
-
-            <button className="w-full py-3 bg-white text-black rounded-xl">
-              Continue with Google
-            </button>
-
-
-
-            <p className="text-sm text-slate-400 mt-6 text-center">
-
-              Already have an account?{" "}
-
-              <Link to="/login" className="text-blue-500">
-                Login
-              </Link>
-
+            <p className="text-sm text-slate-400 mt-4 text-center">
+              Already have an account? <Link to="/login" className="text-blue-500">Login</Link>
             </p>
 
           </div>
 
-        </div>
 
+          {/* OTP Modal */}
+          {showOtpModal && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+
+              <div className="bg-white/5 backdrop-blur-2xl rounded-2xl p-6 w-full max-w-sm text-center">
+
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Verify OTP
+                </h3>
+
+                <p className="text-slate-400 text-sm mb-6">
+                  OTP sent to <br />
+                  <span className="text-white">{form.email}</span>
+                </p>
+
+                <OtpInput onVerify={handleVerifyOtp} loading={loading} />
+
+                {loading && (
+                  <div className="flex justify-center mt-4">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+
+                {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
+
+              </div>
+
+            </div>
+          )}
+
+        </div>
       </div>
+
+
+
+
+
+
+
+
+
 
 
 
       {/* ================= MOBILE ================= */}
+      <div className="min-h-screen bg-slate-950 flex md:hidden items-center justify-center px-6 relative">
 
-      <div className="md:hidden flex min-h-screen items-center justify-center px-5 relative z-10">
-      {/* <div className="md:hidden flex min-h-screen items-center justify-center px-5"> */}
+        {/* GLOW */}
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-blue-500/20 blur-[150px] rounded-full"></div>
 
-        <div className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl z-10">
 
-          <h2 className="text-xl font-semibold mb-6 text-center">
+          {/* TITLE */}
+          <h2 className="text-2xl font-bold text-center text-white mb-2">
             Create Account
           </h2>
 
+          <p className="text-center text-slate-400 text-sm mb-6">
+            Start managing your money smarter
+          </p>
 
-          <form onSubmit={handleSignup} className="space-y-4">
+          {/* FORM */}
+          <form onSubmit={handleSubmit} className="space-y-4">
 
-            <input type="text" placeholder="First name" className="input"/>
+            {/* NAME */}
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                name="firstName"
+                placeholder="First Name"
+                onChange={handleChange}
+                className="input text-slate-400"
+              />
+              <input
+                name="lastName"
+                placeholder="Last Name"
+                onChange={handleChange}
+                className="input text-slate-400"
+              />
+            </div>
 
-            <input type="text" placeholder="Last name" className="input"/>
+            {/* EMAIL */}
+            <input
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              onChange={handleChange}
+              className="input text-slate-400"
+            />
 
-            <input type="email" placeholder="Email" className="input"/>
+            {/* PASSWORD */}
+            <div className="relative">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                onChange={handleChange}
+                className="input pr-10 text-slate-400"
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 cursor-pointer text-slate-400"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+            </div>
 
-            <input type="password" placeholder="Password" className="input"/>
+            {/* CONFIRM PASSWORD */}
+            <div className="relative">
+              <input
+                name="confirmPassword"
+                type={showConfirm ? "text" : "password"}
+                placeholder="Confirm Password"
+                onChange={handleChange}
+                className="input pr-10 text-slate-400"
+              />
+              <span
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-3 cursor-pointer text-slate-400"
+              >
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+            </div>
 
-            <select className="input">
-
-              <option>Select gender</option>
+            {/* GENDER */}
+            <select
+              name="gender"
+              onChange={handleChange}
+              className="input text-slate-400"
+            >
+              <option value="">Select Gender</option>
               <option value="1">Male</option>
               <option value="2">Female</option>
-
+              <option value="3">Other</option>
             </select>
 
-            <button className="w-full py-3 bg-blue-600 rounded-xl">
-              Create Account
+            {/* TERMS */}
+            <div className="flex items-center gap-2 text-sm text-slate-400">
+              <input
+                type="checkbox"
+                name="terms"
+                onChange={handleChange}
+              />
+              <span>
+                I agree to <span className="text-blue-500">Terms & Conditions</span>
+              </span>
+            </div>
+
+            {/* ERROR */}
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+
+            {/* BUTTON */}
+            <button className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:scale-[1.02] active:scale-95 transition shadow-lg shadow-blue-500/30">
+              Get Started
             </button>
 
           </form>
 
-        </div>
-
-      </div>
-
-
-
-      {/* ================= OTP MODAL ================= */}
-
-      {showOtpModal && (
-
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-          onPaste={handlePaste}
-        >
-
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm text-center">
-
-            <h3 className="text-xl font-semibold mb-2">
-              Verify Email
-            </h3>
-
-            <p className="text-slate-400 text-sm mb-6">
-              Enter the 6 digit code sent to your email
-            </p>
-
-
-
-            {!verifying && (
-
-              <div className="flex justify-center gap-3">
-
-                {[...Array(6)].map((_,i)=>(
-
-                  <input
-                    key={i}
-                    maxLength="1"
-                    ref={(el)=>otpRefs.current[i]=el}
-                    onChange={(e)=>handleOtpChange(e,i)}
-                    onKeyDown={(e)=>handleKeyDown(e,i)}
-                    className="w-12 h-12 text-center text-lg bg-slate-950 border border-slate-700 rounded-lg focus:border-blue-500 outline-none"
-                  />
-
-                ))}
-
-              </div>
-
-            )}
-
-
-
-            {verifying && (
-
-              <div className="flex flex-col items-center gap-4">
-
-                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-
-                <p className="text-sm text-slate-400">
-                  Verifying OTP...
-                </p>
-
-              </div>
-
-            )}
-
+          {/* DIVIDER */}
+          <div className="flex items-center my-5">
+            <div className="flex-1 border-t border-slate-700"></div>
+            <span className="px-3 text-slate-400 text-sm">OR</span>
+            <div className="flex-1 border-t border-slate-700"></div>
           </div>
 
-        </div>
+          {/* GOOGLE */}
+          <button className="w-full flex items-center justify-center gap-3 py-3 bg-white text-black rounded-xl font-medium hover:scale-[1.02] transition shadow-md">
 
-      )}
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="google"
+              className="w-5 h-5"
+            />
+
+            Continue with Google
+          </button>
+
+          {/* LOGIN */}
+          <p className="text-sm text-slate-400 mt-5 text-center">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
+          </p>
+
+          {/* TRUST */}
+          <p className="text-xs text-slate-500 mt-4 text-center">
+            Trusted by 10,000+ users
+          </p>
+
+        </div>
+      </div>
 
     </div>
-
   );
-
 };
 
 export default Signup;
+
+
+

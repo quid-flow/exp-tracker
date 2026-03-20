@@ -1,7 +1,8 @@
 import axios from "axios";
 
+console.log(import.meta.env.VITE_API_BASE_URL);
 const apiHelper = axios.create({
-  baseURL: "https://exp-tracker-eq6y.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json"
   }
@@ -9,7 +10,6 @@ const apiHelper = axios.create({
 
 apiHelper.interceptors.request.use(
   (config) => {
-
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -18,8 +18,22 @@ apiHelper.interceptors.request.use(
 
     return config;
   },
+  (error) => Promise.reject(error)
+);
+
+// 🔥 RESPONSE INTERCEPTOR (VERY IMPORTANT)
+apiHelper.interceptors.response.use(
+  (response) => response.data,
   (error) => {
-    return Promise.reject(error);
+    console.error("API Error:", error);
+
+    if (error.response?.status === 401) {
+      // token expired
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error.response?.data || error.message);
   }
 );
 

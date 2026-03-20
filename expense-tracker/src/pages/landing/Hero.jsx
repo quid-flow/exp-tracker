@@ -13,7 +13,7 @@ const Hero = () => {
         {/* GRID WRAPPER */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0">
-            <div className="grid-flip w-full h-full opacity-10 
+            <div className="grid-flip w-full h-full opacity-30 
               bg-[linear-gradient(#1e293b_1px,transparent_1px),linear-gradient(90deg,#1e293b_1px,transparent_1px)] 
               bg-[size:40px_40px]" />
           </div>
@@ -82,9 +82,9 @@ const Hero = () => {
 
                 <div className="flex justify-between mb-6">
                   <div>
-                    <p className="text-slate-400 text-sm">Balance</p>
+                    <p className="text-slate-400 text-sm">Saving</p>
                     <h3 className="text-2xl font-bold text-blue-500">
-                      ₹<CountUp end={32400} duration={0.6} />
+                      ₹<CountUp end={32400} duration={1} />
                     </h3>
                   </div>
 
@@ -117,12 +117,12 @@ const Hero = () => {
 
 
       {/* ================= MOBILE HERO ================= */}
-      <section className="md:hidden relative max-h-screen px-6 pt-10 pb-16 text-center overflow-hidden">
+      <section className="md:hidden relative max-h-screen px-6 pt-10 pb-32 text-center overflow-hidden">
 
         {/* ANIMATED GLOW BACKGROUND */}
         <div className="absolute top-60 left-1/2 -translate-x-1/2 w-[180px] h-[160px] bg-blue-600/70 blur-[120px] rounded-full animate-pulse"></div>
 
-        <div className="relative space-y-6">
+        <div className="relative space-y-10 pt-8">
 
           {/* BADGE */}
           {/* <div className="inline-flex items-center gap-1 px-4 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs border border-blue-500/20">
@@ -144,7 +144,7 @@ const Hero = () => {
           </p>
 
           {/* BUTTONS */}
-          <div className="flex flex-col gap-3 max-w-xs mx-auto">
+          <div className="flex flex-col gap-6 max-w-xs mx-auto">
 
             <Link
               to="/signup"
@@ -180,7 +180,7 @@ const Hero = () => {
                 <div className="flex justify-between mb-4">
 
                   <div>
-                    <p className="text-slate-400 text-xs">Balance</p>
+                    <p className="text-slate-400 text-xs">Saving</p>
                     <h3 className="text-lg font-bold text-blue-500">₹32,400</h3>
                   </div>
 
