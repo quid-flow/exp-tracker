@@ -14,7 +14,7 @@ const {
     const { emailid, password, firstname, lastname, gender } = req.body;
 
     // basic validation check
-    if (!emailid || !password || !firstname || !lastname || gender === undefined) {
+    if (!emailid || !password || !firstname || !lastname) {
       return failureresponse(res, 0, "Invalid input");
     }
 
@@ -27,7 +27,7 @@ const {
     const result = rows[0];
 
     if (result.rtncode === 1) {
-      return successresponse(res, result.rtncode, result.rtnmsg);
+      return successresponse(res, result.rtncode, result.rtnmsg, {otp: result.rtnotp, userid: result.rtnuserid});
     } 
     else {
       return failureresponse(res, result.rtncode, result.rtnmsg);
