@@ -5,23 +5,22 @@ const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
 
-    // token missing
+    // ❌ No token
     if (!authHeader) {
-      return failureresponse(res, 0, "Authorization token missing");
+      return failureresponse(res, 401, "Authorization token missing");
     }
 
-    // Bearer token check
+    // ❌ Invalid format
     const parts = authHeader.split(" ");
     if (parts.length !== 2 || parts[0] !== "Bearer") {
-      return failureresponse(res, 0, "Invalid token format");
+      return failureresponse(res, 401, "Invalid token format");
     }
 
     const token = parts[1];
 
-    // verify token
+    // ✅ Verify
     const decoded = jwt.verifyToken(token);
 
-    // attach user data to request
     req.user = {
       userid: decoded.userid,
       emailid: decoded.emailid,
@@ -29,11 +28,16 @@ const authMiddleware = (req, res, next) => {
       lastname: decoded.lastname
     };
 
-    console.log("DECODED TOKEN =", decoded);
+    console.log("decoded:", decoded);
 
-    next(); // controller ko allow
+    next();
+
   } catch (error) {
-    return failureresponse(res, 0, "Unauthorized or token expired");
+    if (error.name === "TokenExpiredError") {
+      return failureresponse(res, 401, "Token expired");
+    }
+
+    return failureresponse(res, 401, "Invalid token");
   }
 };
 
