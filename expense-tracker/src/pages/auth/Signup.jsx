@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -13,6 +13,7 @@ const Signup = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [signupLoading, setSignupLoading] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -24,7 +25,7 @@ const Signup = () => {
     terms: false
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -36,11 +37,10 @@ const Signup = () => {
     });
   };
 
-
-
   const handleSubmit = async (e) => {
-    console.log("form data:", form);
     e.preventDefault();
+
+    console.log("🟡 Form:", form);
 
     if (!form.firstName || !form.lastName || !form.email || !form.password) {
       return setError("Required fields missing*");
@@ -57,35 +57,43 @@ const Signup = () => {
     setError("");
     setSignupLoading(true);
 
-    try {
-      const data = await apiHelper.post("/auth/signup", {
-        emailid: form.email,
-        password: form.password,
-        firstname: form.firstName,
-        lastname: form.lastName,
-        gender: Number(form.gender)
-      });
-      console.log("res data:", data);
+    const reqData = {
+      emailid: form.email,
+      password: form.password,
+      firstname: form.firstName,
+      lastname: form.lastName,
+      gender: Number(form.gender)
+    };
 
+    console.log("🔵 Request:", reqData);
+
+    try {
+      const data = await apiHelper.post("/auth/signup", reqData);
+
+      console.log("🟢 Response:", data);
 
       if (data.RtnCode === 1) {
-        setShowOtpModal(true); // 🔥 unified modal
+
+        // 🔥 FIX
+        setOtp(data.Data?.otp);
+
+        setShowOtpModal(true);
+
+        console.log("✅ OTP:", data.Data?.otp);
+
       } else {
         setError(data.RtnMsg);
       }
 
     } catch (err) {
+      console.log("🔴 Error:", err);
       setError(err?.RtnMsg || "Signup failed");
     } finally {
       setSignupLoading(false);
     }
   };
 
-
-
   const handleVerifyOtp = async (otp) => {
-    console.log("OTP:", otp);
-
     setLoading(true);
 
     try {
@@ -93,12 +101,10 @@ const Signup = () => {
         emailid: form.email,
         otp: otp
       });
-      console.log("res data:", data);
-
 
       if (data.RtnCode === 1) {
         setShowOtpModal(false);
-        navigate("/");
+        navigate("/login");
       } else {
         setError(data.RtnMsg);
       }
@@ -217,34 +223,41 @@ const Signup = () => {
 
           </div>
 
-
           {/* OTP Modal */}
           {showOtpModal && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
 
-              <div className="bg-white/5 backdrop-blur-2xl rounded-2xl p-6 w-full max-w-sm text-center">
+
+              <div className="bg-white/5 backdrop-blur-2xl border-none rounded-2xl p-8 w-full max-w-sm text-center">
 
                 <h3 className="text-xl font-semibold text-white mb-4">
                   Verify OTP
                 </h3>
 
-                <p className="text-slate-400 text-sm mb-6">
-                  OTP sent to <br />
-                  <span className="text-white">{form.email}</span>
-                </p>
+                <div className="text-white text-sm mb-6">
+                  OTP sent to : <br />
+                  <span className="text-slate-400 lowercase">{form.email}</span>
+                  {otp && (
+                    <div className="text-green-400 text-sm mt-2">
+                      OTP : {otp}
+                    </div>
+                  )}
+                </div>
 
-                <OtpInput onVerify={handleVerifyOtp} loading={loading} />
+                <OtpInput onVerify={handleVerifyOtp} loading={loading} otpValue={otp}  />
 
-                {loading && (
-                  <div className="flex justify-center mt-4">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
-
+                {/* <button
+                  disabled={loading}
+                  className="w-full mt-5 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center gap-2"
+                > */}
+                  {loading && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  )}
+                  {loading ? "" : ""}
+                {/* </button> */}
                 {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
 
               </div>
-
             </div>
           )}
 
@@ -410,6 +423,43 @@ const Signup = () => {
           </p>
 
         </div>
+
+        {showOtpModal && ( // Mobile OTP Modal
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+
+            <div className="bg-white/5 backdrop-blur-2xl rounded-2xl p-6 w-full max-w-sm text-center">
+
+              <h3 className="text-lg font-semibold text-white mb-3">
+                Verify OTP
+              </h3>
+
+              <p className="text-slate-400 text-sm mb-5">
+                OTP sent to : <br />
+                <span className="text-white">{form.email}</span>
+                {otp && (
+                  <div className="text-green-400 text-sm mt-2">
+                    OTP: {otp}
+                  </div>
+                )}
+              </p>
+
+              <OtpInput onVerify={handleVerifyOtp} loading={loading}  otpValue={otp} />
+
+              {/* <button
+                disabled={loading}
+                className="w-full mt-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center gap-2"
+              > */}
+                {loading && (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                )}
+                {loading ? "Verifying..." : ""}
+              {/* </button> */}
+
+              {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
+
+            </div>
+          </div>
+        )}
       </div>
 
     </div>

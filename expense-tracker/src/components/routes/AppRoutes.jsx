@@ -23,12 +23,16 @@ const AppRoutes = () => {
 
       <Route
         path="/login"
-        element={token ? <Navigate to="/dashboard" replace /> : <Login />}
+        element={
+          // token ? // <Navigate to="/dashboard" replace /> : 
+        <Login />}
       />
 
       <Route
         path="/signup"
-        element={token ? <Navigate to="/dashboard" replace /> : <Signup />}
+        element={
+          // token ? // <Navigate to="/dashboard" replace /> : 
+          <Signup />}
       />
 
       <Route 
